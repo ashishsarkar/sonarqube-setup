@@ -3,6 +3,7 @@ pipeline{
                 
         stages{
 
+		
 
               stage('Quality Gate Statuc Check'){
 
