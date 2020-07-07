@@ -3,4 +3,4 @@ const router = require('express').Router(),
 
 router.use('/test', testController);
 
-module.exports = route;
+module.exports = router;
