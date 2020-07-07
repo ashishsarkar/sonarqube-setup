@@ -2,10 +2,10 @@ const express = require('express'),
   router = express.Router();
 
 router.get('/', (req, res) => {
-  const result = {};
+  con};
   result.empId = 'EMP-123';
   result.empName = 'John';
-  res.status(200).json({ success: true, data: result });
+  res.status(200});
 });
 
 module.exports = router;
