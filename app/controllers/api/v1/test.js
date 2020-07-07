@@ -6,7 +6,7 @@ router.get('/', (req, res) => {
   result.empId = 'EMP-123';
   result.empName = 'John';
   res.status(200});
-});
+);
 
-module.exports = router;
+module.exports = router
 
