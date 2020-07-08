@@ -6,7 +6,7 @@ pipeline {
     agent any
     environment
     {
-        // VERSION = "1.0.2_${BUILD_NUMBER}"
+        VERSION = "1.0.2_${BUILD_NUMBER}"
         PROJECT = 'nodeapp'
         IMAGE = "$PROJECT:$VERSION"
         ECRURL = 'https://106102357433.dkr.ecr.ap-south-1.amazonaws.com'
@@ -73,6 +73,7 @@ pipeline {
                     // docker.build("$IMAGE")
 
                     sh "docker build -t nodeapp ."
+
 
                      echo "Build Image using Docker  Completed..................."
                 }
