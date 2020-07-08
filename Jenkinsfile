@@ -68,7 +68,7 @@ pipeline {
                 script
                 {
                     // Build the docker image using a Dockerfile
-                    docker.build("${env.IMAGE}")
+                    docker.build("$IMAGE")
                 }
             }
         }
