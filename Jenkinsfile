@@ -67,8 +67,12 @@ pipeline {
             {
                 script
                 {
+                    echo "Build Image using Docker..................."
+
                     // Build the docker image using a Dockerfile
-                    docker.build()
+                    docker.build("$IMAGE")
+
+                     echo "Build Image using Docker  Completed..................."
                 }
             }
         }
