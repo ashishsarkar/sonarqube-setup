@@ -58,16 +58,16 @@ pipeline {
                 }
             }
         }
-        stage('Build Image using Docker') {
-            steps
-            {
-                script
-                {
-                    // Build the docker image using a Dockerfile
-                    docker.build("$IMAGE","examples/pipelines/TAP_docker_image_build_push_ecr")
-                }
-            }
-        }
+        // stage('Build Image using Docker') {
+        //     steps
+        //     {
+        //         script
+        //         {
+        //             // Build the docker image using a Dockerfile
+        //             docker.build("$IMAGE","examples/pipelines/TAP_docker_image_build_push_ecr")
+        //         }
+        //     }
+        // }
         stage('Push Image to ECR') {
               steps
                 {
