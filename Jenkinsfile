@@ -44,13 +44,16 @@ pipeline {
         }
         stage('Image Build') {
               steps {
+                  echo "Image Build process started..."
                   script{
                        docker.build('$IMAGE')
                 }
+                echo "Image Build process Completed..."
             }
         }
         stage('Push Image') {
               steps {
+                  echo "Push Image process started..."
                   script{
                        docker.withRegistry(ECRURL, ECRCRED)
                        {
