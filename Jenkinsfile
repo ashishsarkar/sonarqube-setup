@@ -44,20 +44,43 @@ pipeline {
         }
 
         stage("ECR Login") {
-            steps {
-                echo "ECR Login  process started..."
-                withAWS(credentials:'AWS_ECR_credentials') {
-                    script {
-                        login = "aws ecr get-login --no-include-email --region ap-south-1"
-                        echo "$login"
-                        sh "${login}"
-                    }
+            steps
+            {
+                script 
+                {
+                    // calculate GIT lastest commit short-hash
+                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                    shortCommitHash = gitCommitHash.take(7)
+                    // calculate a sample version tag
+                    VERSION = shortCommitHash
+                    // set the build display name
+                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
+                    IMAGE = "$PROJECT:$VERSION"
                 }
-                echo "ECR Login process Completed..."
             }
         }
 
 
+
+
+        stage('Push Image') {
+              steps
+                {
+                    echo "Logging IN now..................."
+                    script
+                    {
+                    // login to ECR - for now it seems that that the ECR Jenkins plugin is not performing the login as expected. I hope it will in the future.
+                    sh("eval \$(aws ecr get-login --no-include-email | sed 's|https://||')")
+                    // Push the Docker image to ECR
+                    docker.withRegistry(ECRURL, ECRCRED)
+                    {
+                        docker.image(IMAGE).push()
+                    }
+                }
+
+                    echo "Validation completed................"
+            }
+        }
 
         // stage('Image Build') {
         //       steps {
@@ -68,17 +91,9 @@ pipeline {
         //         echo "Image Build process Completed..."
         //     }
         // }
-        // stage('Push Image') {
-        //       steps {
-        //           echo "Push Image process started..."
-        //           script{
-        //                docker.withRegistry(ECRURL, ECRCRED)
-        //                {
-        //                    docker.image(IMAGE).push()
-        //                }
-        //         }
-        //     }
-        // }
+
+
+
     }
 
 
