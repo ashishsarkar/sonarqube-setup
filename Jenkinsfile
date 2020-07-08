@@ -1,10 +1,18 @@
 pipeline {
     agent any
+    environment
+    {
+        VERSION = "1.0.2_${BUILD_NUMBER}"
+        PROJECT = 'nodeapp'
+        IMAGE = "$PROJECT:$VERSION"
+        ECRURL = 'https://106102357433.dkr.ecr.ap-south-1.amazonaws.com'
+        ECRCRED = 'ecr:ap-south-1:AWS_ECR_credentials'
+    }
     stages {
-        stage('checkout form SCM') {
+        stage('checkout from SCM') {
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
-                echo "Build Number ${env.BUILD_NUMBER}"
+                echo "Build Number -- $VERSION"
                 echo "Build Tag ${env.BUILD_TAG}"
                 echo "Build URL ${env.BUILD_URL}"
                 echo "Build Executor Number ${env.EXECUTOR_NUMBER}"
@@ -12,6 +20,7 @@ pipeline {
                 echo "Build JOB NAME ${env.JOB_NAME}"
                 echo "Build Node Name ${env.NODE_NAME}"
                 echo "Build WORKSPACE ${env.WORKSPACE}"
+
                 git url: 'https://github.com/ashishsarkar/sonarqube-setup.git'
             }
         }
@@ -33,21 +42,32 @@ pipeline {
                 }
             }
         }
-        
-
-        stage('Docker Build & Push to Docker Hub') {
+        stage('Image Build') {
               steps {
-                  script {
-                        sh 'cp -r ../devops-training@2/target .'
-                                      sh 'docker build . -t deekshithsn/devops-training:$Docker_tag'
-                          withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
-                                
-                              sh 'docker login -u deekshithsn -p $docker_password'
-                              sh 'docker push deekshithsn/devops-training:$Docker_tag'
-                          }
+                  script{
+                       docker.build('$IMAGE')
+                }
+            }
+        }
+        stage('Push Image') {
+              steps {
+                  script{
+                       docker.withRegistry(ECRURL, ECRCRED)
+                       {
+                           docker.image(IMAGE).push()
                        }
-                    }
-                 }
-
+                }
+            }
+        }
     }
+
+
+    post
+        {
+            always
+            {
+                // make sure that the Docker image is removed
+                sh "docker rmi $IMAGE | true"
+            }
+        }
 }
