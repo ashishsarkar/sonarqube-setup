@@ -20,13 +20,34 @@ pipeline {
                 SCANNER_HOME = tool 'sonar_scanner'
             }
             steps {
-                withSonarQubeEnv('sonarqube') {
+                script {
+                    withSonarQubeEnv('sonarqube') {
                     sh "${SCANNER_HOME}/bin/sonar-scanner"
-                }
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                    }
+                    timeout(time: 1, unit: 'HOURS') {
+                      def qg = waitForQualityGate()
+                      if (qg.status != 'OK') {
+                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                      }
+                    }
                 }
             }
         }
+        
+
+        stage('Docker Build & Push to Docker Hub') {
+              steps {
+                  script {
+                        sh 'cp -r ../devops-training@2/target .'
+                                      sh 'docker build . -t deekshithsn/devops-training:$Docker_tag'
+                          withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
+                                
+                              sh 'docker login -u deekshithsn -p $docker_password'
+                              sh 'docker push deekshithsn/devops-training:$Docker_tag'
+                          }
+                       }
+                    }
+                 }
+
     }
 }
