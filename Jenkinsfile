@@ -24,6 +24,22 @@ pipeline {
                 git url: 'https://github.com/ashishsarkar/sonarqube-setup.git'
             }
         }
+        stage('Build preparations') {
+            steps
+            {
+                script 
+                {
+                    // calculate GIT lastest commit short-hash
+                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                    shortCommitHash = gitCommitHash.take(7)
+                    // calculate a sample version tag
+                    VERSION = shortCommitHash
+                    // set the build display name
+                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
+                    IMAGE = "$PROJECT:$VERSION"
+                }
+            }
+        }
         stage('Quality Gate Scanner') {
             environment {
                 SCANNER_HOME = tool 'sonar_scanner'
@@ -42,28 +58,17 @@ pipeline {
                 }
             }
         }
-
-        stage("ECR Login") {
+        stage('Build Image using Docker') {
             steps
             {
-                script 
+                script
                 {
-                    // calculate GIT lastest commit short-hash
-                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                    shortCommitHash = gitCommitHash.take(7)
-                    // calculate a sample version tag
-                    VERSION = shortCommitHash
-                    // set the build display name
-                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
-                    IMAGE = "$PROJECT:$VERSION"
+                    // Build the docker image using a Dockerfile
+                    docker.build("$IMAGE","examples/pipelines/TAP_docker_image_build_push_ecr")
                 }
             }
         }
-
-
-
-
-        stage('Push Image') {
+        stage('Push Image to ECR') {
               steps
                 {
                     echo "Logging IN now..................."
@@ -72,10 +77,10 @@ pipeline {
                     // login to ECR - for now it seems that that the ECR Jenkins plugin is not performing the login as expected. I hope it will in the future.
                     sh("eval \$(aws ecr get-login --no-include-email --region ap-south-1| sed 's|https://||')")
                     // Push the Docker image to ECR
-                    // docker.withRegistry(ECRURL, ECRCRED)
-                    // {
-                    //     docker.image(IMAGE).push()
-                    // }
+                    docker.withRegistry(ECRURL, ECRCRED)
+                    {
+                        docker.image(IMAGE).push()
+                    }
                 }
 
                     echo "Validation completed................"
