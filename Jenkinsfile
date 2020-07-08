@@ -76,7 +76,7 @@ pipeline {
                 }
             }
         }
-        stage('Push Image to ECR') {
+        stage('Login to ECR') {
               steps
                 {  
                     script
