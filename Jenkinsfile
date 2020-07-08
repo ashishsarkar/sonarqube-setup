@@ -42,35 +42,51 @@ pipeline {
                 }
             }
         }
-        stage('Image Build') {
-              steps {
-                  echo "Image Build process started..."
-                  script{
-                       docker.build('$IMAGE')
+
+        stage("ECR Login") {
+            steps {
+                echo "ECR Login  process started..."
+                withAWS(credentials:'AWS_ECR_credentials') {
+                    script {
+                        def login = ecrLogin()
+                        sh "${login}"
+                    }
                 }
-                echo "Image Build process Completed..."
+                echo "ECR Login process Completed..."
             }
         }
-        stage('Push Image') {
-              steps {
-                  echo "Push Image process started..."
-                  script{
-                       docker.withRegistry(ECRURL, ECRCRED)
-                       {
-                           docker.image(IMAGE).push()
-                       }
-                }
-            }
-        }
+
+
+
+        // stage('Image Build') {
+        //       steps {
+        //           echo "Image Build process started..."
+        //           script{
+        //                docker.build('$IMAGE')
+        //         }
+        //         echo "Image Build process Completed..."
+        //     }
+        // }
+        // stage('Push Image') {
+        //       steps {
+        //           echo "Push Image process started..."
+        //           script{
+        //                docker.withRegistry(ECRURL, ECRCRED)
+        //                {
+        //                    docker.image(IMAGE).push()
+        //                }
+        //         }
+        //     }
+        // }
     }
 
 
-    post
-        {
-            always
-            {
-                // make sure that the Docker image is removed
-                sh "docker rmi $IMAGE | true"
-            }
-        }
+    // post
+    //     {
+    //         always
+    //         {
+    //             // make sure that the Docker image is removed
+    //             sh "docker rmi $IMAGE | true"
+    //         }
+    //     }
 }
