@@ -48,7 +48,7 @@ pipeline {
                 echo "ECR Login  process started..."
                 withAWS(credentials:'AWS_ECR_credentials') {
                     script {
-                        login = "aws ecr get-login --no-include-email --region ap-south-1 | docker login --username AWS --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com"
+                        login = "aws ecr get-login --no-include-email --region ap-south-1"
                         sh "${login}"
                     }
                 }
