@@ -84,18 +84,7 @@ pipeline {
                 }
             }
         }
-        stage('Login to ECR') {
-              steps
-                {  
-                    script
-                    {
-                    echo "Logging IN now..................."
-                    // login to ECR - for now it seems that that the ECR Jenkins plugin is not performing the login as expected. I hope it will in the future.
-                    sh("eval \$(aws ecr get-login --no-include-email --region ap-south-1| sed 's|https://||')")
-                    echo "Logging Successful..................."
-                    }
-               }
-        }
+
         stage('Push Image to ECR') {
               steps
                 {
