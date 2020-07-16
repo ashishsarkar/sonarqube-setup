@@ -107,6 +107,11 @@ pipeline {
                     echo "Validation completed................"
                 }                    
             }
+            post {
+                always {
+                    sh "docker rmi -f nodeapp:v2$BUILD_ID$VERSION"
+                }
+            }
         }
 
         // ..
