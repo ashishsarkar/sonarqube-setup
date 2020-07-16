@@ -121,6 +121,7 @@ pipeline {
                         configs: "kube.yaml",
                         enableConfigSubstitution: true
                     )
+                    echo "Passed 1st step..... to Dev EKS"
 
                     timeout(time: 650, unit: 'SECONDS') {
                         //Waiting for deployment to rollout successfully
