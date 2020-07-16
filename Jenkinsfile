@@ -74,12 +74,9 @@ pipeline {
         stage('Build Image using Docker') {
             steps
             {
-               
                     echo "Build Image using Docker..................."                
                     sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
                     echo "Build Image using Docker  Completed..................."
-
-
             }
         }
 
@@ -88,7 +85,6 @@ pipeline {
                 {
                     script
                     {
-
                    sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
                    echo "Validation completed................"
                 }                    
