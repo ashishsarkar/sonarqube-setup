@@ -1,9 +1,12 @@
 pipeline {
-    options
-    {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
-    }
     agent any
+    options { 
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timeout(time: 30, unit: 'MINUTES')
+    }    
+    triggers {
+        pollSCM '* * * * *'
+    }
     environment
     {
         VERSION = "1.0.2_${BUILD_NUMBER}"
@@ -40,6 +43,7 @@ pipeline {
                     VERSION = shortCommitHash
                     // set the build display name
                     currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
+                    // currentBuild.displayName = "#" + "1.v" + env.BUILD_NUMBER + " " + params.action + " AWS-ECR-" + params.action
                     IMAGE = "$PROJECT:$VERSION"
                 }
             }
