@@ -77,7 +77,7 @@ pipeline {
                     // docker.build("$IMAGE")
 
                     sh "docker build -t nodeapp ."
-                    sh "docker tag nodeapp:latest 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v1"
+                    sh "docker tag nodeapp:v1 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:latest"
 
 
                      echo "Build Image using Docker  Completed..................."
