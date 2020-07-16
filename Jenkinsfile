@@ -137,4 +137,4 @@ pipeline {
 //     //             sh "docker rmi $IMAGE | true"
 //     //         }
 //     //     }
-    }
+    }}
