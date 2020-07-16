@@ -1,21 +1,22 @@
-#service/networking/run-my-nginx.yaml 
+--- 
 apiVersion: apps/v1
 kind: Deployment
-metadata:
+metadata: 
   name: my-nginx
-spec:
-  selector:
-    matchLabels:
-      run: my-nginx
+spec: 
   replicas: 2
-  template:
-    metadata:
-      labels:
+  selector: 
+    matchLabels: 
+      run: my-nginx
+  template: 
+    metadata: 
+      labels: 
         run: my-nginx
-    spec:
-      containers:
-      - name: my-nginx
-        image: nginx
-        ports:
-        - containerPort: 80
-
+    spec: 
+      containers: 
+        - 
+          image: nginx
+          name: my-nginx
+          ports: 
+            - 
+              containerPort: 80
