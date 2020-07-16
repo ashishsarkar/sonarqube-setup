@@ -108,6 +108,7 @@ pipeline {
             }
         }
 
+        // ..
         // stage('Image Build') {
         //       steps {
         //           echo "Image Build process started..."
