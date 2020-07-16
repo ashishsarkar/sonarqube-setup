@@ -75,65 +75,55 @@ pipeline {
                
                     echo "Build Image using Docker..................."
 
-                    // Build the docker image using a Dockerfile
-                    // docker.build("$IMAGE")
+                    Build the docker image using a Dockerfile
+                    docker.build("$IMAGE")
 
-                    // sh "docker build -t nodeapp ."
-                    // sh "docker tag nodeapp:latest 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2"
-
-                    environment {
-                        IMAGE_NAME = "${env.DEV_ECR_URI}" + ":" + "${env.COMMITID}"
-                    }
-                    steps {
-                        script {
-                            app = docker.build(IMAGE_NAME)
-                            
-                        }
-                    }
+                    sh "docker build -t nodeapp ."
+                    sh "docker tag nodeapp:latest 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2"
                      echo "Build Image using Docker  Completed..................."
                 
             }
         }
 
-//         stage('Push Image to ECR') {
-//               steps
-//                 {
-//                     script
-//                     {
+        stage('Push Image to ECR') {
+              steps
+                {
+                    script
+                    {
                     
-//                     // Push the Docker image to ECR
-//                     // docker.withRegistry(ECRURL, ECRCRED)
-//                     // {
-//                     //     docker.image(IMAGE).push()
-//                     // }
+                    // Push the Docker image to ECR
+                    // docker.withRegistry(ECRURL, ECRCRED)
+                    // {
+                    //     docker.image(IMAGE).push()
+                    // }
 
-//                     sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp"
-//                     echo "Validation completed................"
-//                 }                    
-//             }
-//         }
+                    sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp"
+                    echo "Validation completed................"
+                }                    
+            }
+        }
 
-//         // stage('Image Build') {
-//         //       steps {
-//         //           echo "Image Build process started..."
-//         //           script{
-//         //                docker.build('$IMAGE')
-//         //         }
-//         //         echo "Image Build process Completed..."
-//         //     }
-//         // }
-
-
-
-//     }
+        // stage('Image Build') {
+        //       steps {
+        //           echo "Image Build process started..."
+        //           script{
+        //                docker.build('$IMAGE')
+        //         }
+        //         echo "Image Build process Completed..."
+        //     }
+        // }
 
 
-//     // post
-//     //     {
-//     //         always
-//     //         {
-//     //             // make sure that the Docker image is removed
-//     //             sh "docker rmi $IMAGE | true"
-//     //         }
-//     //     }
-    }}
+
+    }
+
+
+    // post
+    //     {
+    //         always
+    //         {
+    //             // make sure that the Docker image is removed
+    //             sh "docker rmi $IMAGE | true"
+    //         }
+    //     }
+}
