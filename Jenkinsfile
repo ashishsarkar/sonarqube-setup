@@ -15,8 +15,9 @@ pipeline {
         DEV_ECR_URI = '106102357433.dkr.ecr.ap-south-1.amazonaws.com'
         ECRURL = 'https://106102357433.dkr.ecr.ap-south-1.amazonaws.com'
         // ECRCRED = 'ecr:ap-south-1:AWS_ECR_credentials'
-        COMMITID = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim() : params.CommitID}
-    }
+        COMMITID = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim() : params.CommitID
+        }
+    
     stages {
         stage('checkout from SCM') {
             steps {
@@ -136,4 +137,4 @@ pipeline {
 //     //             sh "docker rmi $IMAGE | true"
 //     //         }
 //     //     }
-}
+// }
