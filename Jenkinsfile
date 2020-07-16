@@ -128,7 +128,7 @@ pipeline {
                         //Waiting for deployment to rollout successfully
                         // sh "kubectl rollout status --watch -n ${env.NAMESPACE} deployments ${env.PROJECT_NAME}-${env.COMPONENT}-deployment --kubeconfig ~/.kube/${env.TIER}-gce-nextgen-eks-config.yaml"
                            //sh "kubectl rollout status --watch -n default --kubeconfig ~/.kube/config.yaml"
-                           sh 'kubectl create -f kube.yml'
+                           sh 'kubectl create -f kube.yaml'
                     echo "Passed 3rd step..... to Dev EKS"
                     }
                 }
