@@ -1,16 +1,18 @@
 pipeline {
+   
     agent any
+    
     options { 
         buildDiscarder(logRotator(numToKeepStr: "10"))
         timeout(time: 30, unit: 'MINUTES')
-    }    
-    
+    }  
+
     triggers {
         pollSCM '* * * * *'
     }
     
-    environment
-    {
+    environment {
+
         VERSION = "1.0.2_${BUILD_NUMBER}"
         PROJECT = 'nodeapp'
         IMAGE = "$PROJECT:$VERSION"
@@ -18,10 +20,11 @@ pipeline {
         ECRURL = 'https://106102357433.dkr.ecr.ap-south-1.amazonaws.com'
         // ECRCRED = 'ecr:ap-south-1:AWS_ECR_credentials'
         COMMITID = sh(script: 'git rev-parse --short HEAD', returnStdout: true)
-        }
+    }
     
     
     stages {
+        
         stage('checkout from SCM') {
             steps {
                 echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
@@ -37,6 +40,7 @@ pipeline {
                 git url: 'https://github.com/ashishsarkar/sonarqube-setup.git'
             }
         }
+        
         stage('Build preparations') {
             steps
             {
@@ -54,6 +58,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Quality Gate Scanner') {
             environment {
                 SCANNER_HOME = tool 'sonar_scanner'
@@ -72,6 +77,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Build Image using Docker') {
             steps
             {
@@ -86,21 +92,49 @@ pipeline {
                 {
                     script
                     {
-                   sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-                   echo "Validation completed................"
-                }                    
-            }
+                        sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
+                        echo "Validation completed................"
+                    }                    
+                }   
             post {
                 always {
                     sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
                 }
             }
         }
-    }
-    post {
+
+        stage('Deploying to Dev') {
+                // when {
+                //     expression {
+                //         return(env.BRANCH_NAME=="${env.DEV_BUILD_BRANCH}" && env.TIER == "dev")
+                //     }
+                // }
+                // environment {
+                //     IMAGE_NAME = "${env.DEV_ECR_URI}" + ":" + "${env.COMMIT_ID}"
+                //     APP_DOMAIN_NAME = "${env.PROJECT_NAME}-${env.COMPONENT}.int.dev.affinionservices.com"
+                //     KEYCLOAK_SERVER_URL = "https://keycloak-ha.dev.affinionservices.com"
+                // }
+                steps {
+                    echo "Deploying to Dev EKS"
+                    kubernetesDeploy(
+                        kubeconfigId: "dev_eks_config",
+                        configs: "kube.yaml",
+                        enableConfigSubstitution: true
+                    )
+
+                    timeout(time: 650, unit: 'SECONDS') {
+                        //Waiting for deployment to rollout successfully
+                        // sh "kubectl rollout status --watch -n ${env.NAMESPACE} deployments ${env.PROJECT_NAME}-${env.COMPONENT}-deployment --kubeconfig ~/.kube/${env.TIER}-gce-nextgen-eks-config.yaml"
+                           sh "kubectl rollout status --watch -n default --kubeconfig ~/.kube/config.yaml"
+                    }
+                }
+            }
+
+        post {
             always {
                 echo "One way or another, I have finished"
                 deleteDir() /* clean up our workspace */
             }
+        }
     }
 }
