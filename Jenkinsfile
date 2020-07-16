@@ -75,8 +75,8 @@ pipeline {
                
                     echo "Build Image using Docker..................."
 
-                    Build the docker image using a Dockerfile
-                    docker.build("$IMAGE")
+                    // Build the docker image using a Dockerfile
+                   
 
                     sh "docker build -t nodeapp ."
                     sh "docker tag nodeapp:latest 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2"
