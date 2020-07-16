@@ -19,6 +19,7 @@ pipeline {
         COMMITID = sh(script: 'git rev-parse --short HEAD', returnStdout: true)
         }
     
+    
     stages {
         stage('checkout from SCM') {
             steps {
