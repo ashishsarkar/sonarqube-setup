@@ -7,6 +7,7 @@ pipeline {
     triggers {
         pollSCM '* * * * *'
     }
+    
     environment
     {
         VERSION = "1.0.2_${BUILD_NUMBER}"
