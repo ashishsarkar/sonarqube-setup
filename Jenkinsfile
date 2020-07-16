@@ -75,15 +75,7 @@ pipeline {
             steps
             {
                
-                    echo "Build Image using Docker..................."
-
-                    // Build the docker image using a Dockerfile
-                   
-
-                    // sh "docker build -t nodeapp ."
-                    // sh "docker tag nodeapp:latest 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-                     
-                
+                    echo "Build Image using Docker..................."                
                     sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
                     echo "Build Image using Docker  Completed..................."
 
@@ -96,16 +88,9 @@ pipeline {
                 {
                     script
                     {
-                    
-                    // Push the Docker image to ECR
-                    // docker.withRegistry(ECRURL, ECRCRED)
-                    // {
-                    //     docker.image(IMAGE).push()
-                    // }
 
-                    // sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-                       sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-                    echo "Validation completed................"
+                   sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
+                   echo "Validation completed................"
                 }                    
             }
             post {
@@ -114,29 +99,5 @@ pipeline {
                 }
             }
         }
-
-        // ..
-        // stage('Image Build') {
-        //       steps {
-        //           echo "Image Build process started..."
-        //           script{
-        //                docker.build('$IMAGE')
-        //         }
-        //         echo "Image Build process Completed..."
-        //     }
-        // }
-
-
-
     }
-
-
-    // post
-    //     {
-    //         always
-    //         {
-    //             // make sure that the Docker image is removed
-    //             sh "docker rmi $IMAGE | true"
-    //         }
-    //     }
 }
