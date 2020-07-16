@@ -72,8 +72,7 @@ pipeline {
         stage('Build Image using Docker') {
             steps
             {
-                script
-                {
+               
                     echo "Build Image using Docker..................."
 
                     // Build the docker image using a Dockerfile
@@ -92,7 +91,7 @@ pipeline {
                         }
                     }
                      echo "Build Image using Docker  Completed..................."
-                }
+                
             }
         }
 
