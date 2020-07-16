@@ -97,7 +97,7 @@ pipeline {
                     //     docker.image(IMAGE).push()
                     // }
 
-                    sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp"
+                    sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$VERSION"
                     echo "Validation completed................"
                 }                    
             }
