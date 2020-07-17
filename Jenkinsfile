@@ -92,7 +92,7 @@ pipeline {
             steps {
                 echo "ECR Login  process started..."
                     script {
-                        login = "aws ecr get-login --region ap-south-1"
+                        login = "aws ecr get-login --no-email --region ap-south-1"
                         echo "$login"
                         sh "${login}"
                         echo "ECR Login process Completed..."                    
