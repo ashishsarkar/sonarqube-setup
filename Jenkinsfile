@@ -8,9 +8,9 @@ pipeline {
     }  
 
    
-    triggers {
-        pollSCM '* * * * *'
-    }
+   // triggers {
+    //    pollSCM '* * * * *'
+   // }
     
     environment {
 
