@@ -91,12 +91,13 @@ pipeline {
         stage("ECR Login") {
             steps {
                 echo "ECR Login  process started..."
-                    script {
+                   script {
                         login = "aws ecr get-login --no-include-email --region ap-south-1"
                         echo "$login"
-                        echo "ECR Login process Completed..." 
-                        sh "${login}"                   
-                    }                
+                        echo "ECR Login process Started..." 
+                        sh "${login}" | docker login --username AWS --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com 
+                        echo "ECR Login process Completed..."                  
+                    }              
             }
         }
 
