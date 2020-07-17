@@ -92,8 +92,9 @@ pipeline {
             steps {
                 echo "ECR Login  process started..."
                     sh """
-                        aws ecr get-login --no-include-email --region ap-south-1 | sed s/"https:\/\/"//                     
-                    """    
+                    aws ecr get-login --no-include-email --region ap-south-1 | sed s/"https:\/\/"//   
+                    """                  
+                    
                 echo "ECR Login process Started..."                               
             }
         }
