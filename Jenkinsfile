@@ -56,64 +56,64 @@ pipeline {
             }
         }
         
-        stage('Quality Gate Scanner') {
-            environment {
-                SCANNER_HOME = tool 'sonar_scanner'
-            }
-            steps {
-                script {
-                    withSonarQubeEnv('sonarqube') {
-                    sh "${SCANNER_HOME}/bin/sonar-scanner"
-                    }
-                    timeout(time: 1, unit: 'HOURS') {
-                      def qg = waitForQualityGate()
-                      if (qg.status != 'OK') {
-                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                      }
-                    }
-                }
-            }
-        }
+        // stage('Quality Gate Scanner') {
+        //     environment {
+        //         SCANNER_HOME = tool 'sonar_scanner'
+        //     }
+        //     steps {
+        //         script {
+        //             withSonarQubeEnv('sonarqube') {
+        //             sh "${SCANNER_HOME}/bin/sonar-scanner"
+        //             }
+        //             timeout(time: 1, unit: 'HOURS') {
+        //               def qg = waitForQualityGate()
+        //               if (qg.status != 'OK') {
+        //                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+        //               }
+        //             }
+        //         }
+        //     }
+        // }
         
-        stage('Build Image using Docker') {
-            steps
-            {
-                    echo "Build Image using Docker..................."                
-                    sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
-                    echo "Build Image using Docker  Completed..................."
-            }
-        }
+        // stage('Build Image using Docker') {
+        //     steps
+        //     {
+        //             echo "Build Image using Docker..................."                
+        //             sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
+        //             echo "Build Image using Docker  Completed..................."
+        //     }
+        // }
 
-        stage("ECR Login") {
-            steps {
-                    script
-                    {
-                        echo "ECR Login  process started..."
-                        sh "chmod +x output.sh"
-                        sh "./output.sh"
-                         echo "ECR Login process completed..."    
-                    }                     
-            }
-        }
+        // stage("ECR Login") {
+        //     steps {
+        //             script
+        //             {
+        //                 echo "ECR Login  process started..."
+        //                 sh "chmod +x output.sh"
+        //                 sh "./output.sh"
+        //                  echo "ECR Login process completed..."    
+        //             }                     
+        //     }
+        // }
 
-        stage('Push Image to ECR') {
-              steps
-                {
-                    script
-                    {
+        // stage('Push Image to ECR') {
+        //       steps
+        //         {
+        //             script
+        //             {
                      
-                        sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-                        echo "Validation completed................"
-                    }                    
-                }   
-            post {
-                always {
-                    sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
-                }
-            }
-        }
+        //                 sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
+        //                 echo "Validation completed................"
+        //             }                    
+        //         }   
+        //     post {
+        //         always {
+        //             sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
+        //         }
+        //     }
+        // }
 
-        // stage('Deploying to Dev EKS') {
+        stage('Deploying to Dev EKS') {
                 // when {
                 //     expression {
                 //         return(env.BRANCH_NAME=="${env.DEV_BUILD_BRANCH}" && env.TIER == "dev")
@@ -124,25 +124,25 @@ pipeline {
                 //     APP_DOMAIN_NAME = "${env.PROJECT_NAME}-${env.COMPONENT}.int.dev.affinionservices.com"
                 //     KEYCLOAK_SERVER_URL = "https://keycloak-ha.dev.affinionservices.com"
                 // }
-            //     steps {
-            //         echo "Deploying to Dev EKS"
-            //         kubernetesDeploy(
-            //             kubeconfigId: "dev_eks_config",
-            //             configs: "kube.yaml",
-            //             enableConfigSubstitution: true
-            //         )
-            //         echo "Passed 1st step..... to Dev EKS"
+                steps {
+                    echo "Deploying to Dev EKS"
+                    kubernetesDeploy(
+                        kubeconfigId: "dev_eks_config",
+                        configs: "kube.yaml",
+                        enableConfigSubstitution: true
+                    )
+                    echo "Passed 1st step..... to Dev EKS"
 
-            //         timeout(time: 650, unit: 'SECONDS') {
-            //             echo "Passed 2nd step..... to Dev EKS"
-            //             //Waiting for deployment to rollout successfully
-            //             // sh "kubectl rollout status --watch -n ${env.NAMESPACE} deployments ${env.PROJECT_NAME}-${env.COMPONENT}-deployment --kubeconfig ~/.kube/${env.TIER}-gce-nextgen-eks-config.yaml"
-            //                //sh "kubectl rollout status --watch -n default --kubeconfig ~/.kube/config.yaml"
-            //                sh 'kubectl create -f kube.yaml'
-            //         echo "Passed 3rd step..... to Dev EKS"
-            //         }
-            //     }
-            // }
+                    timeout(time: 650, unit: 'SECONDS') {
+                        echo "Passed 2nd step..... to Dev EKS"
+                        //Waiting for deployment to rollout successfully
+                        // sh "kubectl rollout status --watch -n ${env.NAMESPACE} deployments ${env.PROJECT_NAME}-${env.COMPONENT}-deployment --kubeconfig ~/.kube/${env.TIER}-gce-nextgen-eks-config.yaml"
+                           //sh "kubectl rollout status --watch -n default --kubeconfig ~/.kube/config.yaml"
+                           sh 'kubectl create -f kube.yaml'
+                    echo "Passed 3rd step..... to Dev EKS"
+                    }
+                }
+            }
     }
 
         post {
