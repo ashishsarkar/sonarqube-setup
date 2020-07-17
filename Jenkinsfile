@@ -88,16 +88,14 @@ pipeline {
             }
         }
 
-        stage("ECR Login") {
-            steps {
-                echo "ECR Login  process started..."
-                    sh """
-                    aws ecr get-login --no-include-email --region ap-south-1 | sed s/"https:\/\/"//   
-                    """                  
+        //stage("ECR Login") {
+        //     steps {
+        //         echo "ECR Login  process started..."
+        //             sh "/root/var/lib/jenkins/workspace"                
                     
-                echo "ECR Login process Started..."                               
-            }
-        }
+        //         echo "ECR Login process Started..."                               
+        //     }
+        // }
 
         stage('Push Image to ECR') {
               steps
