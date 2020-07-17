@@ -113,7 +113,7 @@ pipeline {
         //     }
         // }
 
-        stage('Deploying to Dev EKS') {
+            stage('Deploying to Dev EKS') {
                 // when {
                 //     expression {
                 //         return(env.BRANCH_NAME=="${env.DEV_BUILD_BRANCH}" && env.TIER == "dev")
@@ -124,22 +124,31 @@ pipeline {
                 //     APP_DOMAIN_NAME = "${env.PROJECT_NAME}-${env.COMPONENT}.int.dev.affinionservices.com"
                 //     KEYCLOAK_SERVER_URL = "https://keycloak-ha.dev.affinionservices.com"
                 // }
-                steps {
-                    echo "Deploying to Dev EKS"
-                    kubernetesDeploy(
-                        kubeconfigId: "dev_eks_config",
-                        configs: "kube.yaml",
-                        enableConfigSubstitution: true
-                    )
-                    echo "Passed 1st step..... to Dev EKS"
+                // steps {
+                //     echo "Deploying to Dev EKS"
+                //     kubernetesDeploy(
+                //         kubeconfigId: "dev_eks_config",
+                //         configs: "kube.yaml",
+                //         enableConfigSubstitution: true
+                //     )
+                //     echo "Passed 1st step..... to Dev EKS"
 
-                    timeout(time: 650, unit: 'SECONDS') {
-                        echo "Passed 2nd step..... to Dev EKS"
-                        //Waiting for deployment to rollout successfully
-                        // sh "kubectl rollout status --watch -n ${env.NAMESPACE} deployments ${env.PROJECT_NAME}-${env.COMPONENT}-deployment --kubeconfig ~/.kube/${env.TIER}-gce-nextgen-eks-config.yaml"
-                           //sh "kubectl rollout status --watch -n default --kubeconfig ~/.kube/config.yaml"
-                           sh 'kubectl create -f kube.yaml'
-                    echo "Passed 3rd step..... to Dev EKS"
+                //     timeout(time: 650, unit: 'SECONDS') {
+                //         echo "Passed 2nd step..... to Dev EKS"
+                //         //Waiting for deployment to rollout successfully
+                //         // sh "kubectl rollout status --watch -n ${env.NAMESPACE} deployments ${env.PROJECT_NAME}-${env.COMPONENT}-deployment --kubeconfig ~/.kube/${env.TIER}-gce-nextgen-eks-config.yaml"
+                //            //sh "kubectl rollout status --watch -n default --kubeconfig ~/.kube/config.yaml"
+                //            sh 'kubectl create -f kube.yaml'
+                //     echo "Passed 3rd step..... to Dev EKS"
+                //     }
+                // }
+
+                stage ('Deploy') {
+                    steps {
+                        script{
+                            // def image_id = registry + ":$BUILD_NUMBER"
+                            sh "ansible-playbook  playbook.yml"
+                        }
                     }
                 }
             }
