@@ -42,80 +42,80 @@ pipeline {
             }
         }
         
-        // stage('Build preparations') {
-        //     steps
-        //     {
-        //         script 
-        //         {
-        //             // calculate GIT lastest commit short-hash
-        //             gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-        //             shortCommitHash = gitCommitHash.take(7)
-        //             // calculate a sample version tag
-        //             VERSION = shortCommitHash
-        //             // set the build display name
-        //             currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
-        //             // currentBuild.displayName = "#" + "1.v" + env.BUILD_NUMBER + " " + params.action + " AWS-ECR-" + params.action
-        //             IMAGE = "$PROJECT:$VERSION"
-        //         }
-        //     }
-        // }
+        stage('Build preparations') {
+            steps
+            {
+                script 
+                {
+                    // calculate GIT lastest commit short-hash
+                    gitCommitHash = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                    shortCommitHash = gitCommitHash.take(7)
+                    // calculate a sample version tag
+                    VERSION = shortCommitHash
+                    // set the build display name
+                    currentBuild.displayName = "#${BUILD_ID}-${VERSION}"
+                    // currentBuild.displayName = "#" + "1.v" + env.BUILD_NUMBER + " " + params.action + " AWS-ECR-" + params.action
+                    IMAGE = "$PROJECT:$VERSION"
+                }
+            }
+        }
         
-        // stage('Quality Gate Scanner') {
-        //     environment {
-        //         SCANNER_HOME = tool 'sonar_scanner'
-        //     }
-        //     steps {
-        //         script {
-        //             withSonarQubeEnv('sonarqube') {
-        //             sh "${SCANNER_HOME}/bin/sonar-scanner"
-        //             }
-        //             timeout(time: 1, unit: 'HOURS') {
-        //               def qg = waitForQualityGate()
-        //               if (qg.status != 'OK') {
-        //                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
-        //               }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Quality Gate Scanner') {
+            environment {
+                SCANNER_HOME = tool 'sonar_scanner'
+            }
+            steps {
+                script {
+                    withSonarQubeEnv('sonarqube') {
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                    }
+                    timeout(time: 1, unit: 'HOURS') {
+                      def qg = waitForQualityGate()
+                      if (qg.status != 'OK') {
+                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                      }
+                    }
+                }
+            }
+        }
         
-        // stage('Build Image using Docker') {
-        //     steps
-        //     {
-        //             echo "Build Image using Docker..................."                
-        //             sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
-        //             echo "Build Image using Docker  Completed..................."
-        //     }
-        // }
+        stage('Build Image using Docker') {
+            steps
+            {
+                    echo "Build Image using Docker..................."                
+                    sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
+                    echo "Build Image using Docker  Completed..................."
+            }
+        }
 
-        // stage("ECR Login") {
-        //     steps {
-        //         echo "ECR Login  process started..."
-        //             script {
-        //                 login = "aws ecr get-login --region ap-south-1"
-        //                 echo "$login"
-        //                 sh "${login}"
-        //                 echo "ECR Login process Completed..."                    
-        //             }                
-        //     }
-        // }
+        stage("ECR Login") {
+            steps {
+                echo "ECR Login  process started..."
+                    script {
+                        login = "aws ecr get-login --region ap-south-1"
+                        echo "$login"
+                        sh "${login}"
+                        echo "ECR Login process Completed..."                    
+                    }                
+            }
+        }
 
-        // stage('Login and Push Image to ECR') {
-        //       steps
-        //         {
-        //             script
-        //             {
-        //              //   sh ""
-        //                 sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-        //                 echo "Validation completed................"
-        //             }                    
-        //         }   
-        //     post {
-        //         always {
-        //             sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
-        //         }
-        //     }
-        // }
+        stage('Login and Push Image to ECR') {
+              steps
+                {
+                    script
+                    {
+                     //   sh ""
+                        sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
+                        echo "Validation completed................"
+                    }                    
+                }   
+            post {
+                always {
+                    sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
+                }
+            }
+        }
 
         stage('Deploying to Dev EKS') {
                 // when {
