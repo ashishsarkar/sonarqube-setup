@@ -9,6 +9,7 @@ pipeline {
     
     environment {
 
+       
         VERSION = "1.0.2_${BUILD_NUMBER}"
         PROJECT = 'nodeapp'
         IMAGE = "$PROJECT:$VERSION"
