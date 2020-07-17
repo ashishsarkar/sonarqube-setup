@@ -88,18 +88,7 @@ pipeline {
             }
         }
 
-        // stage("ECR Login") {
-        //     steps {
-        //         echo "ECR Login  process started..."
-        //             sh """
-        //                 login = "aws ecr get-login-password --region ap-south-1"
-        //                  sh "$login" 
-                        
-        //                 echo "ECR Login process Started..." 
-                        
-        //             """                                 
-        //     }
-        // }
+
 
         stage('Push Image to ECR') {
               steps
