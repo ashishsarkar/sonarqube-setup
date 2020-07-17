@@ -92,16 +92,16 @@ pipeline {
             steps {
                 echo "ECR Login  process started..."
                     sh """
-                        aws ecr get-login-password \
-                        --region ap-south-1 \
-                        | docker login \
-                        --username AWS \
-                        --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com.amazonaws.com                        
+                        login = "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com"
+                         sh "$login" 
+                        
+                        echo "ECR Login process Started..." 
+                        
                     """                                 
             }
         }
 
-        stage('Login and Push Image to ECR') {
+        stage('Push Image to ECR') {
               steps
                 {
                     script
