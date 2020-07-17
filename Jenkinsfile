@@ -88,16 +88,16 @@ pipeline {
             }
         }
 
-        // stage("ECR Login") {
-        //     steps {
-        //         echo "ECR Login  process started..."
-        //             sh """
-        //                 login = "aws ecr get-login  --no-include-email  --region ap-south-1 | docker login --username AWS --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp"
-        //                  sh "$login" 
-        //                 echo "ECR Login process Started..."                         
-        //             """                                 
-        //     }
-        // }
+        stage("ECR Login") {
+            steps {
+                echo "ECR Login  process started..."
+                    sh """
+                        login = "aws ecr get-login --no-include-email --region ap-south-1 | sed s/"https:\/\/"//"
+                         sh "$login" 
+                        echo "ECR Login process Started..."                         
+                    """                                 
+            }
+        }
 
         stage('Push Image to ECR') {
               steps
