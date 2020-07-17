@@ -100,6 +100,7 @@ pipeline {
                 }
                 echo "ECR Login process Completed..."
             }
+        }
 
         stage('Login and Push Image to ECR') {
               steps
