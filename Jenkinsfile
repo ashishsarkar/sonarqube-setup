@@ -91,13 +91,11 @@ pipeline {
         stage("ECR Login") {
             steps {
                 echo "ECR Login  process started..."
-                withAWS(credentials:'AWS_ECR_credentials') {
                     script {
                         login = "aws ecr get-login --no-include-email --region ap-south-1"
                         echo "$login"
                         sh "${login}"
                     }
-                }
                 echo "ECR Login process Completed..."
             }
         }
