@@ -88,25 +88,25 @@ pipeline {
             }
         }
 
-        stage("ECR Login") {
-            steps {
-                echo "ECR Login  process started..."
-                    sh """
-                        login = "aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com"
-                         sh "$login" 
+        // stage("ECR Login") {
+        //     steps {
+        //         echo "ECR Login  process started..."
+        //             sh """
+        //                 login = "aws ecr get-login-password --region ap-south-1"
+        //                  sh "$login" 
                         
-                        echo "ECR Login process Started..." 
+        //                 echo "ECR Login process Started..." 
                         
-                    """                                 
-            }
-        }
+        //             """                                 
+        //     }
+        // }
 
         stage('Push Image to ECR') {
               steps
                 {
                     script
                     {
-                     //   sh ""
+                     
                         sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
                         echo "Validation completed................"
                     }                    
