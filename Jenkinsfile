@@ -93,8 +93,8 @@ pipeline {
                     script
                     {
                         echo "ECR Login  process started..."
-                        sh "chmod +x /root/output.sh"
-                        sh "/root/output.sh"
+                        sh "chmod +x output.sh"
+                        sh "./output.sh"
                          echo "ECR Login process completed..."    
                     }                     
             }
