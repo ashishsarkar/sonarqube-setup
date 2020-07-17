@@ -93,7 +93,7 @@ pipeline {
                 echo "ECR Login  process started..."
                     sh """
                         aws ecr get-login-password \
-                        --region <region> \
+                        --region ap-south-1 \
                         | docker login \
                         --username AWS \
                         --password-stdin 106102357433.dkr.ecr.ap-south-1.amazonaws.com.amazonaws.com                        
