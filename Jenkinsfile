@@ -148,7 +148,7 @@ pipeline {
                         script{
                             // def image_id = registry + ":$BUILD_NUMBER"
                             sh "pip  install --upgrade --user openshift"
-                            sh "ansible-playbook playbook.yml -e 'ansible_python_interpreter=/usr/bin/python3'"
+                            sh "ansible-playbook playbook.yml --user=jenkins -e 'ansible_python_interpreter=/usr/bin/python3'"
                         }
                     }
                 }
