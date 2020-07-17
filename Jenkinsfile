@@ -147,7 +147,7 @@ pipeline {
                     steps {
                         script{
                             // def image_id = registry + ":$BUILD_NUMBER"
-                            sh "sudo -m pip  install --upgrade --user openshift"
+                            sh "pip  install --upgrade --user openshift"
                             sh "ansible-playbook playbook.yml -e 'ansible_python_interpreter=/usr/bin/python3'"
                         }
                     }
