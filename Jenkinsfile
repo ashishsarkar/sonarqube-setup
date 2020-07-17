@@ -93,8 +93,10 @@ pipeline {
                 echo "ECR Login  process started..."
                     script {
                         login = "aws ecr get-login --no-include-email --region ap-south-1"
-                        echo "$login"
-                        echo "ECR Login process Started..."                                       
+                        echo "$login" | sed "s/https//g"
+                        echo "ECR Login process Started..." 
+                        
+
                     }                
             }
         }
