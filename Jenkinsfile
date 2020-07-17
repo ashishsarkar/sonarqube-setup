@@ -148,7 +148,6 @@ pipeline {
                         script{
                             // def image_id = registry + ":$BUILD_NUMBER"
                             sh "sudo pip3 install --upgrade --user openshift"
-                            sh "sudo pip3 install --upgrade --user kubernetes"
                             sh "ansible-playbook  playbook.yml"
                         }
                     }
