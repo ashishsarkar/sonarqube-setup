@@ -94,8 +94,8 @@ pipeline {
                     script {
                         login = "aws ecr get-login --no-include-email --region ap-south-1"
                         echo "$login"
-                        sh "${login}"
-                        echo "ECR Login process Completed..."                    
+                        echo "ECR Login process Completed..." 
+                        sh "${login}"                   
                     }                
             }
         }
