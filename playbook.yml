@@ -1,9 +1,8 @@
-hosts: localhost
-tasks: 
-  - 
-    k8s: 
-      definition: "{{ lookup('template', 'deployment.yml') | from_yaml }}"
-      namespace: default
+- hosts: localhost
+  tasks:
+  - name: Deploy the application
+    k8s:
       state: present
-      validate_certs: false
-    name: "Deploy the application"
+      validate_certs: no
+      namespace: default
+      definition: "{{ lookup('template', 'deployment.yml') | from_yaml }}"
