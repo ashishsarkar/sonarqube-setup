@@ -150,7 +150,7 @@ pipeline {
                             // sh 'sudo pip3 install --upgrade --user openshift'
                             // sh 'ansible-playbook  playbook.yml'
 
-                            sh 'sudo chmod +x /root && cd /root/ && mkdir temp_workspace'
+                            sh 'sudo chmod +x /root && cd /root/ && sudo mkdir temp_workspace'
                             sh 'cp -r /var/lib/jenkins/workspace/nodeJSPipeline/* /root/temp_workspace'
                             sh '/root/temp_workspace/ansible-playbook  playbook.yml'
                         }
