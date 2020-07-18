@@ -9,8 +9,6 @@ pipeline {
     
    
     environment {
-
-       
         VERSION = "1.0.2_${BUILD_NUMBER}"
         PROJECT = 'nodeapp'
         IMAGE = "$PROJECT:$VERSION"
@@ -114,7 +112,7 @@ pipeline {
             }
         }
 
-            stage('Deploying to Dev EKS') {
+            // stage('Deploying to Dev EKS') {
                 // when {
                 //     expression {
                 //         return(env.BRANCH_NAME=="${env.DEV_BUILD_BRANCH}" && env.TIER == "dev")
@@ -157,7 +155,7 @@ pipeline {
                     }
                 }
             
-    }
+    // }
 
         post {
             always {
@@ -165,5 +163,4 @@ pipeline {
                 deleteDir() /* clean up our workspace */
             }
         }
-}
 }
