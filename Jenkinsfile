@@ -57,64 +57,64 @@ pipeline {
             }
         }
         
-        // stage('Quality Gate Scanner') {
-        //     environment {
-        //         SCANNER_HOME = tool 'sonar_scanner'
-        //     }
-        //     steps {
-        //         script {
-        //             withSonarQubeEnv('sonarqube') {
-        //             sh "${SCANNER_HOME}/bin/sonar-scanner"
-        //             }
-        //             timeout(time: 1, unit: 'HOURS') {
-        //               def qg = waitForQualityGate()
-        //               if (qg.status != 'OK') {
-        //                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
-        //               }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Quality Gate Scanner') {
+            environment {
+                SCANNER_HOME = tool 'sonar_scanner'
+            }
+            steps {
+                script {
+                    withSonarQubeEnv('sonarqube') {
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                    }
+                    timeout(time: 1, unit: 'HOURS') {
+                      def qg = waitForQualityGate()
+                      if (qg.status != 'OK') {
+                           error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                      }
+                    }
+                }
+            }
+        }
         
-        // stage('Build Image using Docker') {
-        //     steps
-        //     {
-        //             echo "Build Image using Docker..................."                
-        //             sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
-        //             echo "Build Image using Docker  Completed..................."
-        //     }
-        // }
+        stage('Build Image using Docker') {
+            steps
+            {
+                    echo "Build Image using Docker..................."                
+                    sh "docker build -t 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION ."
+                    echo "Build Image using Docker  Completed..................."
+            }
+        }
 
-        // stage("ECR Login") {
-        //     steps {
-        //             script
-        //             {
-        //                 echo "ECR Login  process started..."
-        //                 sh "chmod +x output.sh"
-        //                 sh "./output.sh"
-        //                  echo "ECR Login process completed..."    
-        //             }                     
-        //     }
-        // }
+        stage("ECR Login") {
+            steps {
+                    script
+                    {
+                        echo "ECR Login  process started..."
+                        sh "chmod +x output.sh"
+                        sh "./output.sh"
+                         echo "ECR Login process completed..."    
+                    }                     
+            }
+        }
 
-        // stage('Push Image to ECR') {
-        //       steps
-        //         {
-        //             script
-        //             {
+        stage('Push Image to ECR') {
+              steps
+                {
+                    script
+                    {
                      
-        //                 sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
-        //                 echo "Validation completed................"
-        //             }                    
-        //         }   
-        //     post {
-        //         always {
-        //             sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
-        //         }
-        //     }
-        // }
+                        sh "docker push 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION"
+                        echo "Validation completed................"
+                    }                    
+                }   
+            post {
+                always {
+                    sh "docker rmi -f 106102357433.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v2$BUILD_ID$VERSION | true"
+                }
+            }
+        }
 
-            // stage('Deploying to Dev EKS') {
+            stage('Deploying to Dev EKS') {
                 // when {
                 //     expression {
                 //         return(env.BRANCH_NAME=="${env.DEV_BUILD_BRANCH}" && env.TIER == "dev")
@@ -159,10 +159,10 @@ pipeline {
             
     }
 
-        // post {
-        //     always {
-        //         echo "One way or another, I have finished"
-        //         deleteDir() /* clean up our workspace */
-        //     }
-        // }
+        post {
+            always {
+                echo "One way or another, I have finished"
+                deleteDir() /* clean up our workspace */
+            }
+        }
 }
