@@ -147,8 +147,11 @@ pipeline {
                     steps {
                         script{
                             // def image_id = registry + ":$BUILD_NUMBER"
-                            sh "pip  install --upgrade --user openshift"
-                            sh "ansible-playbook playbook.yml --user=jenkins -e 'ansible_python_interpreter=/usr/bin/python3'"
+                            // sh 'sudo pip3 install --upgrade --user openshift'
+                            // sh 'ansible-playbook  playbook.yml'
+                            sh 'cd /root/ && mkdir temp_workspace'
+                            sh 'cp -r /var/lib/jenkins/workspace/nodeJSPipeline/* /root/temp_workspace'
+                            sh '/root/temp_workspace/ansible-playbook  playbook.yml'
                         }
                     }
                 }
