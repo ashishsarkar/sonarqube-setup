@@ -149,7 +149,8 @@ pipeline {
                             // def image_id = registry + ":$BUILD_NUMBER"
                             // sh 'sudo pip3 install --upgrade --user openshift'
                             // sh 'ansible-playbook  playbook.yml'
-                            sh 'cd /root/ && mkdir temp_workspace'
+
+                            sh 'chmod +x /root && cd /root/ && mkdir temp_workspace'
                             sh 'cp -r /var/lib/jenkins/workspace/nodeJSPipeline/* /root/temp_workspace'
                             sh '/root/temp_workspace/ansible-playbook  playbook.yml'
                         }
@@ -158,11 +159,10 @@ pipeline {
             
     }
 
-        post {
-            always {
-                echo "One way or another, I have finished"
-                deleteDir() /* clean up our workspace */
-            }
-        }
-    
+        // post {
+        //     always {
+        //         echo "One way or another, I have finished"
+        //         deleteDir() /* clean up our workspace */
+        //     }
+        // }
 }
