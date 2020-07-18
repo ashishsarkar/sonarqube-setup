@@ -151,8 +151,8 @@ pipeline {
                             // sh 'ansible-playbook  playbook.yml'
 
                             sh 'sudo chmod +x /root && cd /root/ && sudo mkdir temp_workspace'
-                            sh 'cp -r /var/lib/jenkins/workspace/nodeJSPipeline/* /root/temp_workspace'
-                            sh '/root/temp_workspace/ansible-playbook  playbook.yml'
+                            sh 'sudo cp -r /var/lib/jenkins/workspace/nodeJSPipeline/* /root/temp_workspace'
+                            sh 'sudo /root/temp_workspace/ansible-playbook  playbook.yml'
                         }
                     }
                 }
