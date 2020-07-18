@@ -2,11 +2,6 @@ hosts: localhost
 tasks: 
   - 
     k8s: 
-      definition: "{{ lookup('file', 'delete_deployment.sh') }}"
-      state: present
-    name: "Delete the application"
-  - 
-    k8s: 
       definition: "{{ lookup('template', 'deployment.yml') | from_yaml }}"
       namespace: default
       state: present
