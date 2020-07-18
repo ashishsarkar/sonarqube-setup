@@ -1,5 +1,9 @@
 - hosts: localhost
   tasks:
+  - name: Delete the application
+    k8s
+      state: present
+      definition: "{{ lookup('file', 'delete_deployment.sh') }}"  
   - name: Deploy the application
     k8s:
       state: present
